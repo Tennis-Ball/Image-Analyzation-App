@@ -2,6 +2,7 @@ import {StatusBar} from 'expo-status-bar'
 import React from 'react'
 import {StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground, Image} from 'react-native'
 import {Camera} from 'expo-camera'
+import { BarCodeScanner } from 'expo-barcode-scanner';
 
 
 let camera: Camera
@@ -23,7 +24,7 @@ export default function HomeScreen({ navigation }) {
     }
   }
   const __takePicture = async () => {
-    const photo = await camera.takePictureAsync()
+    globalThis.photo = await camera.takePictureAsync()
     console.log(photo)
     setPreviewVisible(true)
     setCapturedImage(photo)
@@ -170,7 +171,6 @@ const styles = StyleSheet.create({
 })
 
 const CameraPreview = ({photo, retakePicture, savePhoto}) => {
-  console.log('sdsfds', photo)
   return (
     <View
       style={{
