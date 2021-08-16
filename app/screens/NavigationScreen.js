@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Linking, StyleSheet, FlatList, Text, View, Alert, TouchableOpacity, ImageBackground } from "react-native";
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import * as MediaLibrary from 'expo-media-library';
 
 
 export default class NavigationScreen extends Component {
@@ -10,9 +11,10 @@ export default class NavigationScreen extends Component {
     this.state = {
       GridListItems: [
         { key: "Google Search" },
-        { key: "QR code" },
+        { key: "Barcode" },
         { key: "Identify" },
         { key: "Save" },
+        { key: "Color Eydropper"}
       ]
     };
   }
@@ -22,11 +24,13 @@ export default class NavigationScreen extends Component {
       this.props.navigation.navigate('Search')
         // Linking.openURL('https://www.google.com/searchbyimage?image_url=' + photo);
     } else if (item == "QR code") {
-        BarCodeScanner.scanFromURLAsync(photo, ['qr'])
+        this.props.navigation.navigate('Qr')
     } else if (item == "Identify") {
         this.props.navigation.navigate('Identify')
+    } else if (item == "Save") {
+        MediaLibrary.saveToLibraryAsync(photo.uri);
     } else {
-        this.props.navigation.navigate('Identify')
+        this.props.navigation.navigate('Color')
     }}
 
   render() {

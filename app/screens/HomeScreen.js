@@ -1,11 +1,12 @@
 import {StatusBar} from 'expo-status-bar'
-import React from 'react'
-import {StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground, Image} from 'react-native'
+import React, { useState, useEffect } from 'react';
+import {StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground, Image, Button} from 'react-native'
 import {Camera} from 'expo-camera'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 
 let camera: Camera
+
 
 export default function HomeScreen({ navigation }) {
   const [startCamera, setStartCamera] = React.useState(false)
@@ -13,6 +14,7 @@ export default function HomeScreen({ navigation }) {
   const [capturedImage, setCapturedImage] = React.useState(null)
   const [cameraType, setCameraType] = React.useState(Camera.Constants.Type.back)
   const [flashMode, setFlashMode] = React.useState('off')
+  const [uniqueValue, setUniqueValue] = React.useState(1)
 
   const __startCamera = async () => {
     const {status} = await Camera.requestPermissionsAsync()
@@ -31,9 +33,13 @@ export default function HomeScreen({ navigation }) {
   }
   const __savePhoto = () => {navigation.navigate('Navigation')}
   const __retakePicture = () => {
+    setUniqueValue(uniqueValue + 1)
     setCapturedImage(null)
     setPreviewVisible(false)
     __startCamera()
+  }
+  const qrReader = () => {
+    navigation.navigate('Qr')
   }
   const __handleFlashMode = () => {
     if (flashMode === 'on') {
@@ -52,7 +58,7 @@ export default function HomeScreen({ navigation }) {
     }
   }
   return (
-    <View style={styles.container}>
+    <View style={styles.container} key={uniqueValue}>
         <View
           style={{
             flex: 1,
@@ -121,7 +127,29 @@ export default function HomeScreen({ navigation }) {
                       {cameraType === 'front' ? '🔄' : '🔄'}
                     </Text>
                   </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={qrReader}
+                    style={{
+                      marginTop: 20,
+                      borderRadius: 50,
+                      height: 25,
+                      width: 25
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 20
+                      }}
+                    >
+                      {cameraType === 'front' ? 'qr' : 'qr'}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
+                <TouchableOpacity
+                    onPress={__retakePicture}
+                    style={{bottom: 0, flexDirection: 'row', flex: 1, paddingBottom: 60, paddingLeft: 30, position: 'absolute'}}
+                  ><Text style={{color: '#fff'}}>Restart Camera</Text>
+                </TouchableOpacity>
                 <View
                   style={{
                     position: 'absolute',
